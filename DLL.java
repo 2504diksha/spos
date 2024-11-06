@@ -1,7 +1,8 @@
 ArithmeticOperations.c
 
-#include &lt;jni.h&gt;
-#include &quot;ArithmeticOperations.h&quot;
+
+#include <jni.h>
+#include "ArithmeticOperations.h"
 
 JNIEXPORT jint JNICALL Java_ArithmeticOperations_add(JNIEnv *env, jobject obj, jint
 a, jint b) {
@@ -38,16 +39,16 @@ public native int divide(int a, int b);
 
 static
 {
-System.loadLibrary(&quot;ArithmeticOperations&quot;);
+System.loadLibrary("ArithmeticOperations");
 }
 
 public static void main(String[] args)
 {
 ArithmeticOperations ops = new ArithmeticOperations();
-int a = 10, b = 5;
-System.out.println(&quot;Addition: &quot; + ops.add(a, b));
-System.out.println(&quot;Subtraction: &quot; + ops.subtract(a, b));
-System.out.println(&quot;Multiplication: &quot; + ops.multiply(a, b));
-System.out.println(&quot;Division: &quot; + ops.divide(a, b));
+int a = 20, b = 10;
+System.out.println("Addition: " +ops.add(a,b));
+System.out.println("Subtraction: " +ops.subtract(a,b));
+System.out.println("Multiplication: " +ops.multiply(a,b));
+System.out.println("Division: " +ops.divide(a,b));
 }
 }
