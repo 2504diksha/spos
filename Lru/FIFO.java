@@ -1,59 +1,47 @@
-import java.util.*;
+import java.io.*;
 
 public class FIFO {
-    static Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader obj = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Enter number of frames: ");
+        int f = Integer.parseInt(obj.readLine());
+        int[] frame = new int[f];
+        for (int i = 0; i < f; i++) frame[i] = -1;  // Initialize frames with -1
 
-    public void FIFOImplementation(int pages[], int capacity) {
-        int pageFaults = 0;
-        Queue<Integer> pageFrame = new LinkedList<>();
-        HashSet<Integer> currentSet = new HashSet<>();
+        System.out.print("Enter number of pages: ");
+        int n = Integer.parseInt(obj.readLine());
+        int[] pages = new int[n];
+        System.out.println("Enter page numbers: ");
+        for (int i = 0; i < n; i++) pages[i] = Integer.parseInt(obj.readLine());
 
-        // Table header
-        System.out.println("\nPage\tPage Fault\tCurrent Page Frame");
-        System.out.println("----------------------------------------");
+        int pgf = 0, pt = 0;
 
         for (int page : pages) {
-            boolean pageFaultOccurred = false;
+            boolean hit = false;
 
-            if (!currentSet.contains(page)) {
-                if (currentSet.size() == capacity) {
-                    int removedPage = pageFrame.poll();
-                    currentSet.remove(removedPage);
+            // Check for a hit
+            for (int j = 0; j < f; j++) {
+                if (frame[j] == page) {
+                    hit = true;
+                    break;
                 }
-                currentSet.add(page);
-                pageFrame.offer(page);
-                pageFaults++;
-                pageFaultOccurred = true;
             }
 
-            // Printing the current page, fault status, and current page frame content
-            System.out.print(page + "\t" + (pageFaultOccurred ? "Yes" : "No") + "\t\t");
-            for (int p : pageFrame) System.out.print(p + " ");
+            // Page fault handling
+            if (!hit) {
+                frame[pt] = page;
+                pt = (pt + 1) % f;  // Move pointer in a circular fashion
+                pgf++;
+            }
+
+            // Display the frame status with -1 in empty positions
+            System.out.print("Frame: ");
+            for (int j = 0; j < f; j++) System.out.print(frame[j] + "   ");
             System.out.println();
         }
 
-        System.out.println("----------------------------------------");
-        System.out.println("Page Faults: " + pageFaults);
-        int pageHits = pages.length - pageFaults;
-        System.out.println("Page Hits: " + pageHits);
-        System.out.println("Hit Ratio: " + pageHits + "/" + pages.length + " = " + (double) pageHits / pages.length);
-    }
-
-    public static void main(String[] args) {
-        FIFO fifo = new FIFO();
-
-        System.out.print("Enter capacity of page frame: ");
-        int capacity = scanner.nextInt();
-
-        System.out.print("Enter number of page sequence: ");
-        int n = scanner.nextInt();
-
-        int[] pages = new int[n];
-        System.out.print("Enter values (space separated): ");
-        for (int i = 0; i < n; i++) {
-            pages[i] = scanner.nextInt();
-        }
-
-        fifo.FIFOImplementation(pages, capacity);
+        int phit = n - pgf;  // Page hits are total pages minus page faults
+        System.out.println("Page fault: " + pgf);
+        System.out.println("Page hit: " + phit);
     }
 }
